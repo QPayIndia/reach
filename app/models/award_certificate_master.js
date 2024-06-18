@@ -22,10 +22,19 @@ AwardCertficateModel.create = ([uid,award,certificate],result)=>{
     });
    
 }
-AwardCertficateModel.deleteInfo = ([uid,tradeid],result)=>{
+AwardCertficateModel.deleteAward = ([uid,awardid],result)=>{
 
-    deleteInfo(uid,tradeid).then(()=>{
-        result(null,{status:"success",message:"Media Delete Successfully",});
+    deleteAward(uid,awardid).then(()=>{
+        result(null,{status:"success",message:"Award Deleted Successfully",});
+    }).catch(({
+
+    }));
+   
+}
+AwardCertficateModel.deleteCertificate = ([uid,awardid],result)=>{
+
+    deleteCertificate(uid,awardid).then(()=>{
+        result(null,{status:"success",message:"Certificate Deleted Successfully",});
     }).catch(({
 
     }));
@@ -64,15 +73,28 @@ function addInfo(uid,award,certificate){
        
     });
 }
-function deleteInfo(uid,tradeid){
+function deleteAward(uid,awardid){
     return new Promise((resolve,reject)=>{
-        sql.query("DELETE FROM trade_member_master WHERE tradeid = ? AND uid = ?",[tradeid,uid],(err,res)=>{
+        sql.query("DELETE FROM award_master WHERE awardid = ? AND uid = ?",[awardid,uid],(err,res)=>{
                 if(err){
                     
-                    console.log('Trade Delete Failed due to '+err);
+                    console.log('Award Delete Failed due to '+err);
                     return;
                 }
-                console.log('Media Inserted successfully');
+                console.log('Award Deleted successfully');
+                resolve();
+            })
+    });
+}
+function deleteCertificate(uid,awardid){
+    return new Promise((resolve,reject)=>{
+        sql.query("DELETE FROM certificate_master WHERE awardid = ? AND uid = ?",[awardid,uid],(err,res)=>{
+                if(err){
+                    
+                    console.log('Certificate Delete Failed due to '+err);
+                    return;
+                }
+                console.log('Certificate Deleted successfully');
                 resolve();
             })
     });

@@ -25,6 +25,8 @@ module.exports = app =>{
     router.post('/deletetradeinfo',business.deleteTradeData);
     router.post('/addaward',business.addAward);
     router.post('/getaward',business.getAward);
+    router.post('/deleteaward',business.deleteAward);
+    router.post('/deletecertificate',business.deleteCertificate);
 
     
 

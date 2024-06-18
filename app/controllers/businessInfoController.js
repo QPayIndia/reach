@@ -353,6 +353,31 @@ exports.getAward = (req,res)=>{
   })
 }
 
+exports.deleteAward = (req,res)=>{
+
+  
+    
+  AwardCertficateModel.deleteAward([req.body.uid,req.body.awardid],(err,data)=>{
+        if(err){
+            res.status(500).send(data);
+        }
+        else
+            res.status(200).json(data);
+    })
+}
+exports.deleteCertificate = (req,res)=>{
+
+  
+    
+  AwardCertficateModel.deleteCertificate([req.body.uid,req.body.awardid],(err,data)=>{
+        if(err){
+            res.status(500).send(data);
+        }
+        else
+            res.status(200).json(data);
+    })
+}
+
 
 
 exports.deleteTradeData = (req,res)=>{
