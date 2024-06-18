@@ -85,17 +85,17 @@ ContactInfo.create = (model,owners,numbers,result)=>{
     }).catch(({
 
     }));
-    addOwners(owners,model.uid).then(()=>{
-        owner = true
-    }).catch(({
+    // addOwners(owners,model.uid).then(()=>{
+    //     owner = true
+    // }).catch(({
 
-    }));
+    // }));
     
-    addNumbers(numbers,model.uid).then(()=>{
-        number = true
-    }).catch(({
+    // addNumbers(numbers,model.uid).then(()=>{
+    //     number = true
+    // }).catch(({
 
-    }));
+    // }));
 }
 
 function addContactInfo(model){
