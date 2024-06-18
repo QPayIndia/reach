@@ -3,7 +3,7 @@ const sql = require('./db.js');
 
 const ContactInfo = function(model){
     this.uid = model.uid,
-    this.contactid = model.contactid,
+    // this.contactid = model.contactid,
     this.phone = model.phone,
     this.whatsapp = model.whatsapp,
     this.landline = model.landline,
@@ -80,11 +80,39 @@ ContactInfo.create = (model,owners,numbers,result)=>{
     let number = false;
     var insertId = 0;
 
-    addContactInfo(model).then((id)=>{
-        contact = true;
-    }).catch(({
+   
+    getData(model.uid).then((data)=>{
+        if(data.length > 0){
+            console.log("Info Already present")
+            updateContactInfo(model).then((id)=>{
+                result(null,{status:"success",message:"Contact Info Updated Successfully",data:id});
+            }).catch(({
+        
+            }));
+        }else{
+            addContactInfo(model).then((id)=>{
+                result(null,{status:"success",message:"Contact Info Inserted Successfully",data:id});
+            }).catch(({
+        
+            }));
+           
+        }
+    })
 
-    }));
+
+    function updateContactInfo(model){
+        return new Promise((resolve,reject)=>{
+            sql.query("UPDATE contact_info SET ? WHERE uid = ?",[model,model.uid],(err,res)=>{
+                    if(err){
+                        
+                        console.log('Contact Info Failed due to '+err);
+                        return;
+                    }
+                    console.log('Contact Info Updated successfully');
+                    resolve(res.insertId);
+                })
+        });
+    }
     // addOwners(owners,model.uid).then(()=>{
     //     owner = true
     // }).catch(({
@@ -166,6 +194,26 @@ function addNumbers(numbers,userid){
             })
         });
     });
+}
+
+function getData(uid){
+    return new Promise((resolve,reject)=>{
+        sql.query("SELECT * FROM contact_info WHERE uid = ? LIMIT 1",[uid],(err,data)=>{
+            if(err){
+                result(err,{status:"failure",message:err,data:{}});
+                
+                return;
+            }
+    
+    
+            resolve(data);
+    
+            
+    
+           
+            
+        })
+    })
 }
 
 ContactInfo.getData = (uid,result)=>{
