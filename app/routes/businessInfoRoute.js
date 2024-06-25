@@ -4,6 +4,8 @@ module.exports = app =>{
 
     var router = require('express').Router();
     router.post('/contactinfo',business.create);
+    router.post('/login',business.Login);
+    router.post('/signup',business.Signup);
     router.post('/getdata',business.getDtaa);
     router.post('/addlocationdata',business.addlocation);
     router.post('/getlocationdata',business.getLocationData);
@@ -16,6 +18,7 @@ module.exports = app =>{
     router.post('/addkycdata',business.addKYCInfo);
     router.post('/getkycdata',business.getKYCInfo);
     router.post('/uploadbphoto',business.uploadphoto);
+    router.post('/uploadpdf',business.uploadPdfFile);
     router.post('/addbphotoinfo',business.addBPicture);
     router.post('/getbphotoinfo',business.getBPicture);
     router.post('/uploadbvideo',business.uploadvideo);
@@ -25,8 +28,8 @@ module.exports = app =>{
     router.post('/deletetradeinfo',business.deleteTradeData);
     router.post('/addaward',business.addAward);
     router.post('/getaward',business.getAward);
-    router.post('/deleteaward',business.deleteAward);
-    router.post('/deletecertificate',business.deleteCertificate);
+    router.post('/addkyb',business.addKYBInfo);
+    router.post('/getkyb',business.getBusinessKYC);
 
     
 

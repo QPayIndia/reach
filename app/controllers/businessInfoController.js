@@ -10,6 +10,8 @@ const TradeMemberModel = require("../models/trade_member_model.js");
 const AwardCertificateMaster = require("../models/award_certificate_master.js");
 const AwardCertficateModel = require("../models/award_certificate_master.js");
 const { json } = require("express");
+const LoginModel = require("../models/LoginModel.js");
+const BusinessKycModel = require("../models/BusinessKycModel.js");
 
 exports.create = (req,res)=>{
     if(!req.body){
@@ -23,6 +25,9 @@ exports.create = (req,res)=>{
     uid : req.body.uid,
     phone : req.body.phone,
     whatsapp : req.body.whatsapp,
+    name:req.body.name,
+    designation:req.body.designation,
+    nameprefix : req.body.nameprefix,
     landline : req.body.landline,
     tollfree : req.body.tollfree,
     email : req.body.email,
@@ -33,7 +38,7 @@ exports.create = (req,res)=>{
     
     var owners = req.body.owners;
     var numbers = req.body.numbers;
-    ContactInfo.create(binfo,owners,numbers,(err,data)=>{
+    ContactInfo.create(binfo,(err,data)=>{
         if(err){
             res.status(500).send({
                data
@@ -130,6 +135,33 @@ exports.addlocation = (req,res)=>{
 exports.getLocationData = (req,res)=>{
     
     LocationInfo.getLocationData(req.body.uid,(err,data)=>{
+        if(err){
+            res.status(500).send(data);
+        }
+        else
+            res.status(200).json(data);
+    })
+}
+exports.Login = (req,res)=>{
+    
+    LoginModel.Login(req.body.phone,(err,data)=>{
+        if(err){
+            res.status(500).send(data);
+        }
+        else
+            res.status(200).json(data);
+    })
+}
+exports.Signup = (req,res)=>{
+
+  const model = new LoginModel({
+   
+    phone : req.body.phone,
+    nameprefix : req.body.nameprefix,
+    name : req.body.name
+  })
+    
+    LoginModel.Signup(model,(err,data)=>{
         if(err){
             res.status(500).send(data);
         }
@@ -245,6 +277,44 @@ exports.addKYCInfo = (req,res)=>{
             res.status(200).json(data);
     })
 }
+exports.addKYBInfo = (req,res)=>{
+
+  const model = new BusinessKycModel({
+    uid : req.body.uid,
+    rc:req.body.rc,
+    gst:req.body.gst,
+    pan:req.body.pan,
+    rentdeed:req.body.rentdeed,
+    partnershipdeed:req.body.partnershipdeed,
+    coa:req.body.coa,
+    aoa:req.body.aoa,
+    moa:req.body.moa,
+    mgt:req.body.mgt,
+    trustdeed:req.body.trustdeed,
+    
+    
+  })
+    
+  BusinessKycModel.create((model),(err,data)=>{
+        if(err){
+            res.status(500).send(data);
+        }
+        else
+            res.status(200).json(data);
+    })
+}
+
+
+exports.getBusinessKYC = (req,res)=>{
+    
+  BusinessKycModel.getKYCData(req.body.uid,(err,data)=>{
+      if(err){
+          res.status(500).send(data);
+      }
+      else
+          res.status(200).json(data);
+  })
+}
 
 
 exports.getBPicture = (req,res)=>{
@@ -351,31 +421,6 @@ exports.getAward = (req,res)=>{
       else
           res.status(200).json(data);
   })
-}
-
-exports.deleteAward = (req,res)=>{
-
-  
-    
-  AwardCertficateModel.deleteAward([req.body.uid,req.body.awardid],(err,data)=>{
-        if(err){
-            res.status(500).send(data);
-        }
-        else
-            res.status(200).json(data);
-    })
-}
-exports.deleteCertificate = (req,res)=>{
-
-  
-    
-  AwardCertficateModel.deleteCertificate([req.body.uid,req.body.awardid],(err,data)=>{
-        if(err){
-            res.status(500).send(data);
-        }
-        else
-            res.status(200).json(data);
-    })
 }
 
 
@@ -493,6 +538,35 @@ exports.uploadphoto = (req,res)=>{
         }
         
         var thumbimg = "/uploads/business/photo/"+req.file.filename;
+        res.status(200).send({status:"success",message:"File Uploaded Successfully",data :{thumb: thumbimg}});
+          
+    });
+}
+
+exports.uploadPdfFile = (req,res)=>{
+
+  const storage = multer.diskStorage({
+      destination: function(req, file, cb) {
+        cb(null, 'uploads/business/kyb');
+      },
+      filename: function(req, file, cb) {
+        cb(null, Date.now() + ".pdf"/*path.extname(file.originalname)*/);
+      }
+    });
+    
+    const upload = multer({ storage: storage });
+    upload.single('file')(req,res,function (err){
+      if (err instanceof multer.MulterError) {
+          return res.status(400).json({status:false, message: 'File upload error', error: err });
+        } else if (err) {
+          return res.status(500).json({status:false, message: 'Server error', error: err });
+        }
+    
+        if (!req.file) {
+          return res.status(400).json({ message: 'No files were uploaded.' });
+        }
+        
+        var thumbimg = "/uploads/business/kyb/"+req.file.filename;
         res.status(200).send({status:"success",message:"File Uploaded Successfully",data :{thumb: thumbimg}});
           
     });
